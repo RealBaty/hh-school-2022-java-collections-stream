@@ -35,28 +35,23 @@ public class Task8 {
 
   //Для фронтов выдадим полное имя, а то сами не могут
   public String convertPersonToString(Person person) {
-    String result = person.getFirstName();
-    if (person.getMiddleName() != null) {
-      result += " " + person.getMiddleName();
-    }
-    if (person.getSecondName() != null) {
-      result += " " + person.getSecondName();
-    }
-    return result;
+    return Stream.of(person.getFirstName(), person.getMiddleName(), person.getSecondName())
+            .filter(Objects::nonNull)
+            .collect(Collectors.joining(" "));
   }
 
   // словарь id персоны -> ее имя (возможно полное имя) (нужно ли скипать первую персону?)
   public Map<Integer, String> getPersonNames(Collection<Person> persons) {
-    return persons.stream()
-            .collect(Collectors.toMap(
-                    Person::getId,
-                    Person::getFirstName,
-                    (a, b) -> a));
+    Map<Integer, String> nameByIdPersons = new HashMap<>();
+    for(var person: persons){
+      nameByIdPersons.put(person.getId(), this.convertPersonToString(person));
+    }
+    return nameByIdPersons;
   }
 
   // есть ли совпадающие в двух коллекциях персоны?
   public boolean hasSamePersons(Collection<Person> persons1, Collection<Person> persons2) {
-    Set<Person> personsSet1= new HashSet<>(persons1);
+    Set<Person> personsSet1 = new HashSet<>(persons1);
     for(var person2: persons2){
       if(personsSet1.contains(person2)){
         return true;
