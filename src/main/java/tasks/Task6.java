@@ -2,7 +2,6 @@ package tasks;
 
 import common.Area;
 import common.Person;
-import javafx.util.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
