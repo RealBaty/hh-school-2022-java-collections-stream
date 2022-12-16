@@ -35,10 +35,7 @@ public class Task8 {
   - В операторе distinct нет необходимости, в итоге в множестве все элементы уникальны
    */
   public Set<String> getDifferentNames(List<Person> persons) {
-    return persons.stream()
-            .skip(1)
-            .map(Person::getFirstName)
-            .collect(Collectors.toSet());
+    return new HashSet<>(this.getNames(persons));
   }
 
   //Для фронтов выдадим полное имя, а то сами не могут
@@ -58,11 +55,11 @@ public class Task8 {
   - Переименованы переменные на более читаемые
    */
   public Map<Integer, String> getPersonNames(Collection<Person> persons) {
-    Map<Integer, String> nameByIdPersons = new HashMap<>();
-    for(var person: persons){
-      nameByIdPersons.put(person.getId(), this.convertPersonToString(person));
-    }
-    return nameByIdPersons;
+    return persons.stream()
+            .collect(Collectors.toMap(
+                    Person::getId,
+                    this::convertPersonToString,
+                    (a, b) -> a));
   }
 
   // есть ли совпадающие в двух коллекциях персоны?
@@ -71,13 +68,9 @@ public class Task8 {
   - Улучшена читаемость за счет отсутствия вложенных циклов
    */
   public boolean hasSamePersons(Collection<Person> persons1, Collection<Person> persons2) {
-    Set<Person> personsSet1 = new HashSet<>(persons1);
-    for(var person2: persons2){
-      if(personsSet1.contains(person2)){
-        return true;
-      }
-    }
-    return false;
+    persons1 = new HashSet<>(persons1);
+    return persons2.stream()
+            .anyMatch(persons1::contains);
   }
 
   //...
